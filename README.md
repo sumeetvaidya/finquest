@@ -4,6 +4,8 @@
 conda create -n finquest python=3.8 anaconda -y
 conda activate finquest
 conda install pandas
+conda install scipy
+conda install numpy
 conda install -c pyviz hvplot geoviews
 pip install python-dotenv
 conda install -c anaconda requests
