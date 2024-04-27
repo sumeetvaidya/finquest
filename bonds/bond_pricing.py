@@ -29,6 +29,15 @@ def bond_price(fv: float, t: int, coupon: float, freq: int, y: float) -> float:
 
 
 def bond_ytm(price: float, fv: float, t: int, coupon: float, freq: int) -> float:
+    """
+    Function to compute yield to maturity
+    :param price: Price of the bond
+    :param fv: Face Value of the bond
+    :param t: Time in years
+    :param coupon: Coupon rate
+    :param freq: Number of times the coupon pays yearly
+    :return: float the yield to maturity
+    """
     print(f'==> bond_ytm Price={price} FV={fv} T={t} coupon={coupon} freq={freq}')
     guess = 0.5
     n_periods = t * freq
@@ -41,12 +50,23 @@ def bond_ytm(price: float, fv: float, t: int, coupon: float, freq: int) -> float
     return ytm
 
 
-def calc_spot_rate(price: float, tenors, coupons, fv: float, freq: int) :
+def calc_spot_rate(price: float, tenors, coupons, fv: float, freq: int):
+    """
+    Function to compute spot rates based on tenors and coupon rates
+    :param price: Price of the bond
+    :param tenors: Tenor list
+    :param coupons: Coupon by Tenor list
+    :param fv: Face value
+    :param freq: Frequency
+    :return: spot rate array
+    """
+    print(f'==> calc_spot_rate Price={price} FV={fv} Tenors={tenors.tolist()} coupons={coupons.tolist()} freq={freq}')
     guess = 0.5
     # initialize spot rate array
     spot_array = np.zeros(tenors.shape)
+
     for i in range(0, len(tenors)):
-        if i < 1:
+        if i <= 1:
             spot_array[i] = coupons[i] / 100
         else:
             n_periods = i
