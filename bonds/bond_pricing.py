@@ -82,9 +82,31 @@ def calc_spot_rate(price: float, tenors, coupons, fv: float, freq: int):
             zero_rate = lambda x: (cf_temp + (fv + coupon) / (1 + x / freq) ** (counter + 1)) - price
             opt = optimize.newton(zero_rate, guess)
             spot_array[i] = opt
-    print(f'<== calc_spot_rate spot={spot_array.tolist()}')
+    spot_array_pct = spot_array * 100
+    print(f'<== calc_spot_rate spot={spot_array_pct.tolist()}')
 
     return spot_array
+
+
+def forward_rate_calc(spot_array, freq):
+    """
+    Function to compute forward rate array
+    :param spot_array: spot rate array
+    :param freq:
+    :return: implied forward rate array
+    """
+
+    imp_fwd = np.zeros(spot_array.shape)
+    counter = 2
+    for i in range(0, len(spot_array) - 1):
+        f = ((((1 + spot_array[counter - 1] / freq) ** (counter)) / (1 + spot_array[counter - 2] / freq) ** (
+                counter - 1)) - 1) * freq
+        imp_fwd[i + 1] = f
+        counter += 1
+
+    imp_fwd_pct = imp_fwd * 100
+    print(f'<== forward_rate_calc imp_fwd={imp_fwd_pct.tolist()}')
+    return imp_fwd
 
 
 def main():
@@ -106,6 +128,8 @@ def main():
     freq_semi_annual = 2
 
     spot_array = calc_spot_rate(price, tenors, coupon_list, face_value, freq_semi_annual)
+
+    imp_fwd = forward_rate_calc(spot_array, freq)
 
 
 if __name__ == "__main__":
